@@ -9,9 +9,8 @@ build() {
 
 package() {
     export CARGO_TARGET_DIR="${srcdir}/${pkgname}-${pkgver}"
-    cd ..
     usrdir="$pkgdir/usr"
     mkdir -p $usrdir
-    cargo install --path . --root "$usrdir"
+    cargo install --path "../../.." --root "$usrdir"
     rm -f $usrdir/.crates.toml
 }

@@ -7,6 +7,8 @@ extern crate serde;
 
 use anyhow::{format_err, Context, Result};
 use clap::{App, load_yaml};
+use std::env;
+use std::path::Path;
 
 pub mod config;
 
@@ -21,7 +23,12 @@ fn build_arch_package(mksrcinfo: bool,
     use std::fs::File;
     use std::io::Write;
 
-    config::ArchConfig::load(manifest_path)?.generate_pkgbuild()?;
+    let target_dir = Path::new("target/archlinux");
+    std::fs::create_dir_all(target_dir)?;
+
+    let ac = config::ArchConfig::load(manifest_path)?;
+    env::set_current_dir(target_dir)?;
+    ac.generate_pkgbuild()?;
 
     if mksrcinfo {
         let output = Command::new("makepkg")
